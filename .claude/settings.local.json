@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la ~/.nvm 2>&1 | head -5; echo \"---brew---\"; ls /opt/homebrew/bin | grep -i node; echo \"---volta---\"; ls ~/.volta 2>&1 | head -5; echo \"---fnm---\"; ls ~/.fnm 2>&1 | head -5; echo \"---asdf---\"; ls ~/.asdf 2>&1 | head -5; find / -maxdepth 4 -iname \"node\" -type f 2>/dev/null)",
+      "Bash(brew install *)",
+      "Bash(npm -v)",
+      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)"
+    ]
+  }
+}
