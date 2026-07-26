@@ -68,59 +68,87 @@ export const techStack = [
 
 export type ProjectStatus = "Completed" | "In Progress";
 
+// Overrides the generic projectNote below when a project has a different
+// access story (e.g. group coursework under academic integrity rules).
+const ACADEMIC_NOTE =
+  "Group coursework project — codebase isn't shared publicly per academic integrity policy, but happy to walk through the design and implementation.";
+
 export const projects: {
   number: string;
   title: string;
   description: string;
   tags: string[];
   status: ProjectStatus;
+  note?: string;
 }[] = [
   {
     number: "01",
-    title: "Lymph Node Metastasis Prediction",
+    title: "Grafluence",
     description:
-      "MIL framework for predicting lymph node metastasis from H&E whole slide images, trained on gigapixel pathology scans.",
-    tags: ["Python", "PyTorch", "OpenSlide", "MIL"],
+      "Graph-based recommendation engine modeling 38K influencers and 1.6M relationships, using multimodal embeddings (FashionCLIP, SocBERT) served through FastAPI microservices on AWS Lambda/EC2 with sub-500ms latency.",
+    tags: ["Python", "FastAPI", "PostgreSQL", "AWS"],
     status: "Completed",
+    note: ACADEMIC_NOTE,
   },
   {
     number: "02",
-    title: "AI Portfolio Terminal Website",
+    title: "PennOS",
     description:
-      "This site — a terminal-inspired portfolio built with Next.js, styled as a retro hacker aesthetic with live data panels.",
-    tags: ["Next.js", "TypeScript", "Tailwind"],
-    status: "In Progress",
+      "A custom Unix-like operating system built from scratch — priority-based process scheduler, a FAT-based file system, and a shell with job control and built-in commands.",
+    tags: ["C", "Operating Systems", "Scheduling", "Filesystems"],
+    status: "Completed",
+    note: ACADEMIC_NOTE,
   },
   {
     number: "03",
-    title: "Real-Time Fraud Detection Pipeline",
+    title: "RISC-V CPU Design",
     description:
-      "Built a real-time fraud detection pipeline serving millions of users across MENA with sub-second scoring latency.",
-    tags: ["Go", "Python", "Kubernetes", "PostgreSQL"],
+      "A RISC-V CPU built incrementally in SystemVerilog — from a single-cycle datapath through multicycle and fully pipelined designs with caching, plus custom divider and carry-lookahead adder modules.",
+    tags: ["SystemVerilog", "RISC-V", "Computer Architecture"],
     status: "Completed",
+    note: ACADEMIC_NOTE,
   },
   {
     number: "04",
-    title: "Distributed Systems Shell / PennOS",
+    title: "NS-3 Routing Protocols Simulation",
     description:
-      "A Unix-like OS kernel and shell built from scratch, implementing custom scheduling, a FAT-based filesystem, and process management.",
-    tags: ["C", "Systems", "Scheduling", "Filesystems"],
+      "Simulates Distance Vector and Link State routing protocols alongside a Chord DHT and PennSearch distributed search layer across custom network topologies for protocol performance analysis.",
+    tags: ["C++", "NS-3", "Distributed Systems", "DHT"],
     status: "Completed",
+    note: ACADEMIC_NOTE,
   },
   {
     number: "05",
-    title: "Healthcare Research Dashboard",
+    title: "IvyGraph: Reddit Sentiment & Graph Analysis",
     description:
-      "Internal dashboard for research fellows to track cohort statistics and model performance across clinical datasets.",
-    tags: ["Python", "FastAPI", "React", "PostgreSQL"],
-    status: "In Progress",
+      "Analyzes sentiment and interaction dynamics across Ivy League subreddits by scraping and graphing the top 1000 posts from each, comparing Penn's community engagement to peer schools.",
+    tags: ["Python", "PRAW", "NLTK", "NetworkX"],
+    status: "Completed",
+    note: ACADEMIC_NOTE,
   },
   {
     number: "06",
-    title: "Autonomous Systems Data Platform",
+    title: "RecipEasy",
     description:
-      "Perception and localization data pipeline for autonomous delivery robots, handling sensor logs at fleet scale.",
-    tags: ["C++", "ROS2", "Python", "AWS"],
+      "A meal-planning web app for college students offering personalized recipe recommendations based on available ingredients, time constraints, and dietary preferences.",
+    tags: ["React", "Node.js", "MySQL", "AWS"],
+    status: "Completed",
+    note: ACADEMIC_NOTE,
+  },
+  {
+    number: "07",
+    title: "PokemonMap Builder",
+    description:
+      "An interactive web tool for building custom Pokémon-style maps — place terrain tiles, move a character sprite, and design your own explorable world.",
+    tags: ["JavaScript", "HTML5", "CSS", "Node.js"],
+    status: "Completed",
+  },
+  {
+    number: "08",
+    title: "pizza-validator",
+    description:
+      "A lightweight TypeScript npm package (with CLI) that validates pizza objects — size, crust type, toppings — and returns detailed error messages for invalid input.",
+    tags: ["TypeScript", "npm", "CLI"],
     status: "Completed",
   },
 ];

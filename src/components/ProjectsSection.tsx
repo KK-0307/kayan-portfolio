@@ -112,7 +112,7 @@ export default function ProjectsSection() {
             </div>
 
             <p className="text-xs text-muted border-t border-border pt-3">
-              <span className="text-accent">&gt;</span> {projectNote}
+              <span className="text-accent">&gt;</span> {activeProject.note ?? projectNote}
             </p>
           </div>
         </div>

@@ -13,7 +13,19 @@
       "Bash(find / -maxdepth 6 -iname \"*claude*attach*\" -o -iname \"*claude*upload*\" 2>/dev/null | grep -v node_modules | head -20; echo \"---\"; find /var/folders -maxdepth 4 -iname \"*.png\" -newer /Users/kayan/Desktop/portfolio-site/package.json 2>/dev/null | head -20)",
       "Bash(git status *)",
       "Bash(git check-ignore *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(kill %1)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(brew list *)",
+      "Read(//Library/**)",
+      "Read(//usr/local/**)",
+      "Read(//opt/homebrew/bin/**)",
+      "Bash(tectonic resume.tex)",
+      "Bash(sed -e 's/^\\\\\\\\pdfgentounicode=1/%\\\\\\\\pdfgentounicode=1/' -e 's/^\\\\\\\\input{glyphtounicode}/%\\\\\\\\input{glyphtounicode}/' resume.tex)",
+      "Bash(tectonic resume_test.tex)",
+      "Bash(pdfinfo resume_test.pdf)",
+      "Bash(python3 -c ' *)"
     ]
   }
 }
