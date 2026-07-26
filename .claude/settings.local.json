@@ -27,7 +27,14 @@
       "Bash(pdfinfo resume_test.pdf)",
       "Bash(python3 -c ' *)",
       "Bash(cp \"/Users/kayan/Downloads/IMG_6456.JPG\" /Users/kayan/Desktop/portfolio-site/public/portrait.jpg *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(curl -sI --max-time 8 \"https://ice1.somafm.com/groovesalad-128-mp3\")",
+      "Bash(curl -s --max-time 6 -o /dev/null -w \"HTTP_CODE:%{http_code}\\\\n\" \"https://ice1.somafm.com/groovesalad-128-mp3\")",
+      "Bash(curl -s --max-time 6 -o /dev/null -w \"google: %{http_code}\\\\n\" \"https://www.google.com\")",
+      "Bash(curl -s --max-time 6 -o /dev/null -w \"somafm-site: %{http_code}\\\\n\" \"https://somafm.com\")",
+      "Bash(curl -s --max-time 6 -o /dev/null -w \"somafm-ice2: %{http_code}\\\\n\" \"https://ice2.somafm.com/groovesalad-128-mp3\")",
+      "Bash(curl -s --max-time 6 -o /dev/null -w \"somafm-ice5: %{http_code}\\\\n\" \"https://ice5.somafm.com/groovesalad-128-mp3\")",
+      "Bash(curl -s --max-time 6 -o /dev/null -w \"test-audio: %{http_code}\\\\n\" \"https://www.w3schools.com/html/horse.mp3\")"
     ]
   }
 }

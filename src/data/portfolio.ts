@@ -38,9 +38,10 @@ export const navigation: NavItem[] = [
 
 export const nowPlaying = {
   track: "lofi hip hop radio",
-  source: "playlist",
-  // Public SomaFM "Groove Salad" stream — swap this for your own lofi playlist/stream URL.
-  streamUrl: "https://ice1.somafm.com/groovesalad-128-mp3",
+  source: "youtube",
+  // Played via YouTube's official embeddable IFrame Player (hidden, audio-only
+  // in the UI). Swap this for any other YouTube video id you'd like on loop.
+  youtubeVideoId: "n61ULEU7CO0",
 };
 
 export const status = {
