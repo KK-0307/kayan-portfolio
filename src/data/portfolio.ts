@@ -1,5 +1,5 @@
 // Matches the basePath baked in at build time (see next.config.ts) so client-side
-// asset fetches (e.g. the ASCII portrait canvas) resolve correctly under GitHub Pages.
+// asset fetches (e.g. the portrait canvas) resolve correctly under GitHub Pages.
 export const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export const profile = {
@@ -19,13 +19,21 @@ export const profile = {
   tagline: "First, solve the problem. Then, write the code.",
 };
 
-export const navigation = [
-  { number: "01", label: "home", subtitle: "whoami", href: "#home" },
-  { number: "02", label: "projects", subtitle: "things I've built", href: "#projects" },
-  { number: "03", label: "experience", subtitle: "work I've done", href: "#experience" },
-  { number: "04", label: "teaching", subtitle: "mentoring & TA", href: "#teaching" },
-  { number: "05", label: "photography", subtitle: "visual diary", href: "#photography" },
-  { number: "06", label: "contact", subtitle: "let's connect", href: "#contact" },
+export type NavItem = {
+  number: string;
+  label: string;
+  subtitle: string;
+  // "scroll" jumps to a matching section id; "modal" opens a NavModals popup keyed by `target`.
+  kind: "scroll" | "modal";
+  target: string;
+};
+
+export const navigation: NavItem[] = [
+  { number: "01", label: "home", subtitle: "whoami", kind: "scroll", target: "home" },
+  { number: "02", label: "projects", subtitle: "things I've built", kind: "scroll", target: "projects" },
+  { number: "03", label: "experience", subtitle: "work I've done", kind: "modal", target: "experience" },
+  { number: "04", label: "teaching", subtitle: "mentoring & TA", kind: "modal", target: "teaching" },
+  { number: "05", label: "contact", subtitle: "let's connect", kind: "modal", target: "contact" },
 ];
 
 export const nowPlaying = {
@@ -40,7 +48,7 @@ export const status = {
   timezone: "EDT (UTC-4)",
   availability: "Open to Opportunities",
   focus: "Building impact through code and research",
-  currently: "HUP ML Research Fellow, Penn Engineering",
+  currently: "Technical Program Manager, Penn Engineering",
 };
 
 export const skills = [
@@ -68,18 +76,12 @@ export const techStack = [
 
 export type ProjectStatus = "Completed" | "In Progress";
 
-// Overrides the generic projectNote below when a project has a different
-// access story (e.g. group coursework under academic integrity rules).
-const ACADEMIC_NOTE =
-  "Group coursework project — codebase isn't shared publicly per academic integrity policy, but happy to walk through the design and implementation.";
-
 export const projects: {
   number: string;
   title: string;
   description: string;
   tags: string[];
   status: ProjectStatus;
-  note?: string;
 }[] = [
   {
     number: "01",
@@ -88,7 +90,6 @@ export const projects: {
       "Graph-based recommendation engine modeling 38K influencers and 1.6M relationships, using multimodal embeddings (FashionCLIP, SocBERT) served through FastAPI microservices on AWS Lambda/EC2 with sub-500ms latency.",
     tags: ["Python", "FastAPI", "PostgreSQL", "AWS"],
     status: "Completed",
-    note: ACADEMIC_NOTE,
   },
   {
     number: "02",
@@ -97,7 +98,6 @@ export const projects: {
       "A custom Unix-like operating system built from scratch — priority-based process scheduler, a FAT-based file system, and a shell with job control and built-in commands.",
     tags: ["C", "Operating Systems", "Scheduling", "Filesystems"],
     status: "Completed",
-    note: ACADEMIC_NOTE,
   },
   {
     number: "03",
@@ -106,7 +106,6 @@ export const projects: {
       "A RISC-V CPU built incrementally in SystemVerilog — from a single-cycle datapath through multicycle and fully pipelined designs with caching, plus custom divider and carry-lookahead adder modules.",
     tags: ["SystemVerilog", "RISC-V", "Computer Architecture"],
     status: "Completed",
-    note: ACADEMIC_NOTE,
   },
   {
     number: "04",
@@ -115,7 +114,6 @@ export const projects: {
       "Simulates Distance Vector and Link State routing protocols alongside a Chord DHT and PennSearch distributed search layer across custom network topologies for protocol performance analysis.",
     tags: ["C++", "NS-3", "Distributed Systems", "DHT"],
     status: "Completed",
-    note: ACADEMIC_NOTE,
   },
   {
     number: "05",
@@ -124,7 +122,6 @@ export const projects: {
       "Analyzes sentiment and interaction dynamics across Ivy League subreddits by scraping and graphing the top 1000 posts from each, comparing Penn's community engagement to peer schools.",
     tags: ["Python", "PRAW", "NLTK", "NetworkX"],
     status: "Completed",
-    note: ACADEMIC_NOTE,
   },
   {
     number: "06",
@@ -133,7 +130,6 @@ export const projects: {
       "A meal-planning web app for college students offering personalized recipe recommendations based on available ingredients, time constraints, and dietary preferences.",
     tags: ["React", "Node.js", "MySQL", "AWS"],
     status: "Completed",
-    note: ACADEMIC_NOTE,
   },
   {
     number: "07",
@@ -154,3 +150,65 @@ export const projects: {
 ];
 
 export const projectNote = "Codebase available upon request.";
+
+export const experience = [
+  {
+    role: "Technical Program Manager, Engineering Operations",
+    org: "University of Pennsylvania School of Engineering & Applied Sciences",
+    location: "Philadelphia, PA",
+    dates: "Sep 2025 – Present",
+    bullets: [
+      "Developed internal tooling (Python, SQL, Apps Script, REST APIs, Slack API, Google Workspace APIs) to automate program operations, reducing manual workflows by 70%.",
+      "Architected ETL pipelines and BI dashboards (Looker Studio, Tableau, Power BI) for real-time operational analytics and executive KPI reporting.",
+      "Built scalable workflow orchestration for onboarding, approvals, and resource allocation across 10+ concurrent engineering programs.",
+      "Led cross-functional delivery across 15+ engineering, research, and academic teams.",
+    ],
+  },
+  {
+    role: "Machine Learning Research Fellow",
+    org: "Hospital of the University of Pennsylvania",
+    location: "Philadelphia, PA",
+    dates: "Aug 2025 – Feb 2026",
+    bullets: [
+      "Built GPU-enabled preprocessing pipelines for 2TB+ of whole-slide pathology images (Python, OpenSlide, PyTorch), cutting data prep time by 50%.",
+      "Automated multimodal data ingestion and validation, reducing manual preprocessing by 60%.",
+      "Developed tooling supporting transformer-based pathology models, integrating histology images with clinical metadata.",
+      "Benchmarked computer vision models with clinicians and ML researchers, accelerating experiment turnaround by 30%.",
+    ],
+  },
+  {
+    role: "Software Engineer Intern",
+    org: "Tabby (Fintech Startup)",
+    location: "Dubai, UAE",
+    dates: "May 2024 – Aug 2024",
+    bullets: [
+      "Built high-throughput Go microservices and gRPC/REST APIs for BNPL payment processing, cutting inter-service latency by 25%.",
+      "Built FastAPI/PostgreSQL services for real-time fraud detection and LLM-assisted tooling that raised automated test coverage to 92%.",
+      "Deployed containerized microservices on AWS EKS with Terraform and Jenkins CI/CD, maintaining 99.99% uptime through 5x traffic spikes.",
+      "Implemented OAuth 2.0, JWT, and PSD2-compliant auth flows, supporting SOC 2 compliance.",
+    ],
+  },
+  {
+    role: "Software Engineer Intern",
+    org: "Abu Dhabi Investment Authority (ADIA)",
+    location: "Abu Dhabi, UAE",
+    dates: "May 2023 – Aug 2023",
+    bullets: [
+      "Built fault-tolerant streaming pipelines (Kafka, Spark) for real-time market data, increasing ETL throughput by 40%.",
+      "Optimized low-latency C++/Python trading systems using OpenMP and cache-aware data structures, cutting execution latency by 20%.",
+      "Accelerated CUDA-based Monte Carlo pricing simulations, reducing computation time by 50%.",
+      "Built SQL analytics dashboards, eliminating 10+ hours/week of manual reporting.",
+    ],
+  },
+];
+
+export const teaching = [
+  { course: "CIS 3200", title: "Advanced Algorithms & Discrete Mathematics", dates: "Jan 2024 – May 2025" },
+  { course: "NETS 4200", title: "Algorithmic Game Theory", dates: "Jan 2025 – May 2025" },
+  { course: "ESE 4500 & ESE 4510", title: "Senior Design", dates: "Aug 2025 – May 2026" },
+];
+
+export const contact = {
+  email: "kayan@alumni.upenn.edu",
+  linkedin: "https://www.linkedin.com/in/kayan-mohamed/",
+};

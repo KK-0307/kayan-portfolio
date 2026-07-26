@@ -4,18 +4,51 @@ import { useEffect, useRef, useState } from "react";
 import { User } from "lucide-react";
 import { profile, basePath } from "@/data/portfolio";
 
-// Dense → sparse. Dark source pixels get "ink"-heavy characters, light pixels
-// (e.g. the studio backdrop) fade toward space so the subject reads as a
-// glowing pink silhouette against the terminal background.
-const RAMP = "@%#*+=-:. ";
-const CHAR_ADVANCE = 0.6; // approx glyph width as a fraction of font-size for monospace fonts
+function parseColor(input: string, fallback: [number, number, number]): [number, number, number] {
+  const hex = input.trim().replace("#", "");
+  if (hex.length === 6 && /^[0-9a-fA-F]{6}$/.test(hex)) {
+    return [
+      parseInt(hex.slice(0, 2), 16),
+      parseInt(hex.slice(2, 4), 16),
+      parseInt(hex.slice(4, 6), 16),
+    ];
+  }
+  return fallback;
+}
+
+// A 2%-clip contrast stretch spreads out whatever tonal range the source
+// photo actually has before the duotone mapping, so the final image doesn't
+// look muddy under flat or uneven lighting.
+function contrastStretch(histogram: number[], total: number): (v: number) => number {
+  const clip = total * 0.02;
+  let lo = 0;
+  let hi = 255;
+  let count = 0;
+  for (let i = 0; i < 256; i++) {
+    count += histogram[i];
+    if (count > clip) {
+      lo = i;
+      break;
+    }
+  }
+  count = 0;
+  for (let i = 255; i >= 0; i--) {
+    count += histogram[i];
+    if (count > clip) {
+      hi = i;
+      break;
+    }
+  }
+  if (hi <= lo) return (v) => v;
+  return (v) => Math.min(255, Math.max(0, ((v - lo) / (hi - lo)) * 255));
+}
 
 export default function Portrait({ className = "" }: { className?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
-  const [ascii, setAscii] = useState<string | null>(null);
-  const [cellSize, setCellSize] = useState({ fontSize: 5, lineHeight: 5 });
   const [failed, setFailed] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -33,16 +66,14 @@ export default function Portrait({ className = "" }: { className?: string }) {
 
     function render() {
       const container = containerRef.current;
+      const canvas = canvasRef.current;
       const image = imageRef.current;
-      if (!container || !image) return;
+      if (!container || !canvas || !image) return;
 
       const rect = container.getBoundingClientRect();
       const containerW = rect.width || 320;
       const containerH = rect.height || 400;
       const targetAspect = containerW / containerH;
-
-      const cols = Math.max(50, Math.min(110, Math.round(containerW / 5)));
-      const rows = Math.max(1, Math.round(cols / targetAspect));
 
       // Center-crop the source image to the container's aspect ratio (object-fit: cover).
       const iw = image.naturalWidth;
@@ -59,37 +90,55 @@ export default function Portrait({ className = "" }: { className?: string }) {
         sy = (ih - sh) / 2;
       }
 
-      const canvas = document.createElement("canvas");
-      canvas.width = cols;
-      canvas.height = rows;
+      const dpr = window.devicePixelRatio || 1;
+      const pixelW = Math.round(containerW * dpr);
+      const pixelH = Math.round(containerH * dpr);
+
+      canvas.width = pixelW;
+      canvas.height = pixelH;
+      canvas.style.width = `${containerW}px`;
+      canvas.style.height = `${containerH}px`;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
-      ctx.drawImage(image, sx, sy, sw, sh, 0, 0, cols, rows);
 
-      let data: Uint8ClampedArray;
+      // Draw at full target resolution — no coarse sampling grid — so every
+      // bit of real photographic detail (the actual face) survives.
+      ctx.drawImage(image, sx, sy, sw, sh, 0, 0, pixelW, pixelH);
+
+      let imageData: ImageData;
       try {
-        data = ctx.getImageData(0, 0, cols, rows).data;
+        imageData = ctx.getImageData(0, 0, pixelW, pixelH);
       } catch {
         setFailed(true);
         return;
       }
+      const data = imageData.data;
+      const pixelCount = pixelW * pixelH;
 
-      let out = "";
-      for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-          const i = (y * cols + x) * 4;
-          const brightness = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-          const charIndex = Math.min(RAMP.length - 1, Math.floor((brightness / 255) * RAMP.length));
-          out += RAMP[charIndex];
-        }
-        out += "\n";
+      const luminance = new Float32Array(pixelCount);
+      const histogram = new Array(256).fill(0);
+      for (let p = 0; p < pixelCount; p++) {
+        const i = p * 4;
+        const l = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+        luminance[p] = l;
+        histogram[Math.min(255, Math.max(0, l | 0))]++;
+      }
+      const stretch = contrastStretch(histogram, pixelCount);
+
+      const style = getComputedStyle(container);
+      const [lr, lg, lb] = parseColor(style.getPropertyValue("--color-accent"), [244, 114, 182]);
+      const [dr, dg, db] = parseColor(style.getPropertyValue("--color-bg"), [10, 10, 10]);
+
+      for (let p = 0; p < pixelCount; p++) {
+        const t = stretch(luminance[p]) / 255; // 0 (dark) -> 1 (light)
+        const i = p * 4;
+        data[i] = dr + (lr - dr) * t;
+        data[i + 1] = dg + (lg - dg) * t;
+        data[i + 2] = db + (lb - db) * t;
       }
 
-      setAscii(out);
-      setCellSize({
-        fontSize: containerW / cols / CHAR_ADVANCE,
-        lineHeight: containerH / rows,
-      });
+      ctx.putImageData(imageData, 0, 0);
+      setReady(true);
     }
 
     let resizeTimer: ReturnType<typeof setTimeout>;
@@ -113,19 +162,8 @@ export default function Portrait({ className = "" }: { className?: string }) {
     >
       {!failed ? (
         <>
-          <pre
-            aria-hidden={!ascii}
-            className="absolute inset-0 m-0 w-full overflow-hidden whitespace-pre text-accent select-none"
-            style={{
-              fontSize: `${cellSize.fontSize}px`,
-              lineHeight: `${cellSize.lineHeight}px`,
-              letterSpacing: 0,
-            }}
-          >
-            {ascii}
-          </pre>
-          <div className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.25)_0px,rgba(0,0,0,0.25)_1px,transparent_1px,transparent_3px)]" />
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,transparent_55%,rgba(0,0,0,0.6)_150%)]" />
+          <canvas ref={canvasRef} aria-hidden={!ready} className="absolute inset-0 h-full w-full" />
+          <div className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.12)_0px,rgba(0,0,0,0.12)_1px,transparent_1px,transparent_3px)]" />
           <span className="sr-only">{profile.name}</span>
         </>
       ) : (

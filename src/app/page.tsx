@@ -7,10 +7,11 @@ import ProjectsSection from "@/components/ProjectsSection";
 import StatusPanel from "@/components/StatusPanel";
 import SkillsPanel from "@/components/SkillsPanel";
 import TechStackPanel from "@/components/TechStackPanel";
+import { NavModalProvider } from "@/components/NavModalContext";
 
 export default function Home() {
   return (
-    <>
+    <NavModalProvider>
       <Header />
 
       <main className="flex-1 p-6">
@@ -34,6 +35,6 @@ export default function Home() {
       </main>
 
       <Footer />
-    </>
+    </NavModalProvider>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { navigation, profile } from "@/data/portfolio";
+import { useNavModal, type NavModalKey } from "./NavModalContext";
 
 type Line = { type: "input" | "output"; text: string };
 
@@ -12,10 +13,11 @@ function scrollToId(id: string) {
   return true;
 }
 
-function runCommand(raw: string): Line[] {
+function runCommand(raw: string): { lines: Line[]; modalToOpen: NavModalKey | null } {
   const trimmed = raw.trim();
   const [cmd, ...args] = trimmed.split(/\s+/);
   const out: Line[] = [{ type: "input", text: trimmed }];
+  let modalToOpen: NavModalKey | null = null;
 
   switch (cmd.toLowerCase()) {
     case "help":
@@ -32,11 +34,15 @@ function runCommand(raw: string): Line[] {
       break;
     case "cd": {
       const target = args[0]?.toLowerCase();
+      const match = navigation.find((n) => n.label === target);
       if (!target) {
         out.push({ type: "output", text: "usage: cd <section>" });
-      } else if (!navigation.some((n) => n.label === target)) {
+      } else if (!match) {
         out.push({ type: "output", text: `cd: no such section: ${target}` });
-      } else if (scrollToId(target)) {
+      } else if (match.kind === "modal") {
+        modalToOpen = match.target as NavModalKey;
+        out.push({ type: "output", text: `→ ${target}` });
+      } else if (scrollToId(match.target)) {
         out.push({ type: "output", text: `→ ${target}` });
       } else {
         out.push({ type: "output", text: `${target}/ is coming soon` });
@@ -47,10 +53,11 @@ function runCommand(raw: string): Line[] {
       out.push({ type: "output", text: `command not found: ${cmd} (try 'help')` });
   }
 
-  return out;
+  return { lines: out, modalToOpen };
 }
 
 export default function Footer() {
+  const { open } = useNavModal();
   const [value, setValue] = useState("");
   const [history, setHistory] = useState<Line[]>([]);
   const [cmdHistory, setCmdHistory] = useState<string[]>([]);
@@ -68,7 +75,9 @@ export default function Footer() {
     if (trimmed.toLowerCase() === "clear") {
       setHistory([]);
     } else {
-      setHistory((h) => [...h, ...runCommand(trimmed)]);
+      const { lines, modalToOpen } = runCommand(trimmed);
+      setHistory((h) => [...h, ...lines]);
+      if (modalToOpen) open(modalToOpen);
     }
     setCmdHistory((h) => [...h, trimmed]);
     setHistoryIndex(null);
@@ -99,7 +108,7 @@ export default function Footer() {
   };
 
   return (
-    <footer id="contact" className="scroll-mt-6 border-t border-border bg-bg text-sm">
+    <footer className="border-t border-border bg-bg text-sm">
       {history.length > 0 && (
         <div
           ref={outputRef}

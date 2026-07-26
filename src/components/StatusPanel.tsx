@@ -11,7 +11,7 @@ const rows: { label: string; value: string; accent?: boolean }[] = [
 
 export default function StatusPanel() {
   return (
-    <TerminalPanel title="~/status" id="experience">
+    <TerminalPanel title="~/status">
       <dl className="space-y-3 text-sm">
         {rows.map((row) => (
           <div key={row.label} className="flex gap-4">

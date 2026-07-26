@@ -25,7 +25,8 @@
       "Bash(sed -e 's/^\\\\\\\\pdfgentounicode=1/%\\\\\\\\pdfgentounicode=1/' -e 's/^\\\\\\\\input{glyphtounicode}/%\\\\\\\\input{glyphtounicode}/' resume.tex)",
       "Bash(tectonic resume_test.tex)",
       "Bash(pdfinfo resume_test.pdf)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(cp \"/Users/kayan/Downloads/IMG_6456.JPG\" /Users/kayan/Desktop/portfolio-site/public/portrait.jpg *)"
     ]
   }
 }
