@@ -26,7 +26,8 @@
       "Bash(tectonic resume_test.tex)",
       "Bash(pdfinfo resume_test.pdf)",
       "Bash(python3 -c ' *)",
-      "Bash(cp \"/Users/kayan/Downloads/IMG_6456.JPG\" /Users/kayan/Desktop/portfolio-site/public/portrait.jpg *)"
+      "Bash(cp \"/Users/kayan/Downloads/IMG_6456.JPG\" /Users/kayan/Desktop/portfolio-site/public/portrait.jpg *)",
+      "Bash(git commit *)"
     ]
   }
 }
