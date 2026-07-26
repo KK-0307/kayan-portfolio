@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+A terminal-inspired personal portfolio, built with Next.js (App Router) and Tailwind CSS.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view it.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Edit content (name, bio, projects, skills, tech stack, now-playing stream) in [`src/data/portfolio.ts`](src/data/portfolio.ts) — everything on the page is driven from that one file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Adding your photo
 
-## Learn More
+Drop a photo at `public/portrait.jpg` (or update `profile.portraitSrc` in `src/data/portfolio.ts` to match your filename). Until a photo is present, the whoami panel falls back to a placeholder icon automatically.
 
-To learn more about Next.js, take a look at the following resources:
+## Deploying to GitHub Pages
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project is configured for static export (`output: "export"` in `next.config.ts`), which is what GitHub Pages requires.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Automatic (recommended):** push to `main` and the included workflow at [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) will build and deploy automatically. One-time setup:
 
-## Deploy on Vercel
+1. In your GitHub repo, go to **Settings → Pages** and set **Source** to "GitHub Actions".
+2. Push to `main` (or run the workflow manually from the Actions tab).
+3. Your site will be live at `https://<username>.github.io/<repo>/` (or `https://<username>.github.io/` if the repo is named `<username>.github.io`).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The workflow automatically computes the correct `basePath` for project pages vs. root user/org pages — no manual config needed.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Manual build:**
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/<repo-name> npm run build
+```
+
+This outputs a static site to the `out/` folder, which you can push to a `gh-pages` branch or any static host. Omit `NEXT_PUBLIC_BASE_PATH` if deploying to a domain root.
+
+## Stack
+
+- Next.js (App Router, static export)
+- TypeScript
+- Tailwind CSS
+- lucide-react + react-icons for iconography

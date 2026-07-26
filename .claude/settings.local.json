@@ -4,7 +4,16 @@
       "Bash(ls -la ~/.nvm 2>&1 | head -5; echo \"---brew---\"; ls /opt/homebrew/bin | grep -i node; echo \"---volta---\"; ls ~/.volta 2>&1 | head -5; echo \"---fnm---\"; ls ~/.fnm 2>&1 | head -5; echo \"---asdf---\"; ls ~/.asdf 2>&1 | head -5; find / -maxdepth 4 -iname \"node\" -type f 2>/dev/null)",
       "Bash(brew install *)",
       "Bash(npm -v)",
-      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)"
+      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(npx eslint *)",
+      "Bash(npm run *)",
+      "Bash(find /private/tmp/claude-501 -iname \"*.png\" -o -iname \"*.jpg\" -o -iname \"*.jpeg\" 2>/dev/null | grep -v node_modules | head -50)",
+      "Bash(find / -maxdepth 6 -iname \"*claude*attach*\" -o -iname \"*claude*upload*\" 2>/dev/null | grep -v node_modules | head -20; echo \"---\"; find /var/folders -maxdepth 4 -iname \"*.png\" -newer /Users/kayan/Desktop/portfolio-site/package.json 2>/dev/null | head -20)",
+      "Bash(git status *)",
+      "Bash(git check-ignore *)",
+      "Bash(git add *)"
     ]
   }
 }
