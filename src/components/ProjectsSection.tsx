@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FaGithub } from "react-icons/fa6";
 import TerminalPanel from "./TerminalPanel";
 import Modal from "./Modal";
 import { projects, projectNote, type ProjectStatus } from "@/data/portfolio";
@@ -48,13 +49,27 @@ export default function ProjectsSection() {
                 </span>
               ))}
             </div>
-            <button
-              type="button"
-              onClick={() => setOpenIndex(index)}
-              className="mt-auto text-left text-sm text-accent hover:underline"
-            >
-              &gt; view project
-            </button>
+            <div className="mt-auto flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => setOpenIndex(index)}
+                className="text-left text-sm text-accent hover:underline"
+              >
+                &gt; view project
+              </button>
+              {project.githubUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${project.title} on GitHub`}
+                  className="flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-accent"
+                >
+                  <FaGithub className="h-3.5 w-3.5" />
+                  github
+                </a>
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -79,9 +94,34 @@ export default function ProjectsSection() {
             ))}
           </div>
 
-          <p className="text-xs text-muted border-t border-border pt-3">
-            <span className="text-accent">&gt;</span> {projectNote}
-          </p>
+          {activeProject.githubUrl ? (
+            <div className="flex flex-col gap-2 border-t border-border pt-3 text-sm">
+              <a
+                href={activeProject.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-accent hover:underline"
+              >
+                <FaGithub className="h-4 w-4 shrink-0" />
+                {activeProject.githubUrl.replace("https://", "")}
+              </a>
+              {activeProject.liveUrl && (
+                <a
+                  href={activeProject.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-accent hover:underline"
+                >
+                  <span className="w-4 shrink-0 text-center">&gt;</span>
+                  live demo: {activeProject.liveUrl.replace("https://", "")}
+                </a>
+              )}
+            </div>
+          ) : (
+            <p className="text-xs text-muted border-t border-border pt-3">
+              <span className="text-accent">&gt;</span> {projectNote}
+            </p>
+          )}
         </Modal>
       )}
     </TerminalPanel>
